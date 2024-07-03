@@ -3,3 +3,7 @@ version: 1.1.1
 main: com.lvdat.minevuicore.MinevuiCore
 author: lvdat
 api-version: 1.20.6
+commands:
+  minevui:
+    description: Command for MinevuiCore
+    usage: /minevui <subcommand>

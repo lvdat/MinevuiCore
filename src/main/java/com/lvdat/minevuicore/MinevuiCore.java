@@ -1,8 +1,10 @@
 package com.lvdat.minevuicore;
 
 import org.bukkit.Bukkit;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -37,25 +39,29 @@ public class MinevuiCore extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onCreatureSpawn(CreatureSpawnEvent event) {
-        EntityType entityType = event.getEntityType();
+        LivingEntity entity = event.getEntity();
+        EntityType entityType = entity.getType();
         FileConfiguration config = getConfig();
 
         // Adjust health if configured
         if (config.contains("mobs." + entityType.name() + ".health")) {
             double health = config.getDouble("mobs." + entityType.name() + ".health");
-            event.getEntity().setHealth(health);
+            entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(health);
+            entity.setHealth(health);
         }
     }
 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        EntityType entityType = event.getEntityType();
-        FileConfiguration config = getConfig();
+        if (event.getDamager() instanceof LivingEntity damager) {
+            EntityType entityType = damager.getType();
+            FileConfiguration config = getConfig();
 
-        // Adjust damage if configured
-        if (config.contains("mobs." + entityType.name() + ".damage")) {
-            double damage = config.getDouble("mobs." + entityType.name() + ".damage");
-            event.setDamage(damage);
+            // Adjust damage if configured
+            if (config.contains("mobs." + entityType.name() + ".damage")) {
+                double damage = config.getDouble("mobs." + entityType.name() + ".damage");
+                event.setDamage(damage);
+            }
         }
     }
 
@@ -63,5 +69,11 @@ public class MinevuiCore extends JavaPlugin implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player playerJoin = event.getPlayer();
         getLogger().info("> " + playerJoin.getDisplayName() + " connected");
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        Player playerQuit = event.getPlayer();
+        getLogger().info("> " + playerQuit.getDisplayName() + " left server");
     }
 }
