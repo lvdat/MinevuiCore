@@ -1,0 +1,9 @@
+mobs:
+  ZOMBIE:
+    health: 100.0
+    damage: 8.0
+    spawn-rate: 0.5
+  SKELETON:
+    health: 100.0
+    damage: 6.0
+    spawn-rate: 0.7
