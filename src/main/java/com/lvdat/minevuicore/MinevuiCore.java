@@ -22,6 +22,10 @@ public class MinevuiCore extends JavaPlugin implements Listener {
 
         getServer().getPluginManager().registerEvents(this, this);
 
+        MinevuiCommand commandExecutor = new MinevuiCommand(this);
+        getCommand("minevui").setExecutor(commandExecutor);
+        getCommand("minevui").setTabCompleter(commandExecutor);
+
         String serverVersion = Bukkit.getVersion();
 
         getLogger().info(">>> MinevuiCore for Minevui Network!<<<");
